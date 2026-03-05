@@ -1,0 +1,38 @@
+---
+description: GitHub/delete protection – agent must never run delete commands
+alwaysApply: true
+---
+
+# GitHub & Delete Protection
+
+## Principle
+
+**Never** run any command or MCP action that can delete, remove, or destroy resources. All destructive actions must be performed by a human.
+
+## Scope
+
+- **Terminal**: Do not run `git` or `gh` (or other CLI) commands that delete anything.
+- **MCP**: Do not call any MCP tool that deletes or removes a resource (e.g. GitHub MCP delete branch, delete repo, etc.).
+- **Resources**: Branches, projects, repositories, users, worktrees, tags, releases, and any similar entities.
+
+## Prohibited (examples – do not run)
+
+- `git branch -d` / `git branch -D`
+- `git worktree remove`
+- `gh repo delete`
+- `gh api` (or equivalent) to delete branches/repos/users
+- Any MCP tool that deletes a branch, project, user, repository, or worktree
+- `git push origin --delete <branch>`
+- Commands that permanently remove or overwrite history (e.g. force-push that removes commits, `git reset --hard` to remove work)
+
+## Allowed
+
+- Read-only git/gh (e.g. `git status`, `gh pr list`, `gh repo view`)
+- Creating branches, PRs, issues, comments
+- Cloning, fetching, checking out (non-destructive)
+
+## If the user asks to delete
+
+1. **Do not** perform the delete.
+2. Tell the user that delete actions must be done by them and give the exact command or steps they can run themselves (e.g. "Run this yourself: `gh repo delete owner/repo`" or "Delete the branch in GitHub: …").
+3. Only provide instructions; do not execute.

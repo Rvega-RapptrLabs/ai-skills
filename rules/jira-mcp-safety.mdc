@@ -1,0 +1,18 @@
+---
+description: Jira MCP safety – no delete without confirmation
+alwaysApply: true
+---
+
+# Jira MCP Server – Delete Protection
+
+## Project context
+
+- All Jira-related questions and actions in this project refer to the **REFFER TEAM** space/board. When the user asks about "my tickets", "the project", "the board", or Jira in general without specifying a project, use the REFFER TEAM project/space.
+
+## Delete protection
+
+- **Never** run any Jira MCP tool or action that deletes a Jira issue (or that permanently removes an issue). If unsure whether a tool deletes an issue, do not call it for that purpose.
+- If the user asks to delete an issue (or to remove/archive it in a way that amounts to deletion):
+ 1. **Do not** perform the delete.
+ 2. Ask for **explicit confirmation**, e.g.: "This will delete Jira issue [KEY]. Reply with 'yes' or 'confirm' to proceed."
+ 3. Only if the user clearly confirms (e.g. "yes", "confirm", "do it") in a **new message** may you proceed with the delete action. If they do not confirm, do not run the delete.
