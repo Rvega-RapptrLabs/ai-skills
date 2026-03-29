@@ -43,8 +43,7 @@ ai-skills/
    - **Rules** → `cp rules/*.mdc ~/.cursor/rules/` (or your project’s `.cursor/rules/`)
 
 3. **Dependencies for flutter-dev**: The Flutter agent expects:
-   - **branch-creator** skill at `~/.cursor/skills/branch-creator/` (for branch naming from Jira).
-   - **pr-creator-agent** at `~/.cursor/skills/pr-creator-agent/` (for PR creation).
+   - **pr-creator-agent** at `~/.cursor/skills/pr-creator-agent/` (for PR creation; branch naming rules are defined in the agent itself).
    - Jira MCP and GitHub CLI (`gh`) configured and authenticated.
 
 ---
@@ -103,7 +102,7 @@ To add a new stack, add a new template in `templates/` and extend the “Select 
 - **Plan in a file**: Writes an implementation plan to `.cursor/plans/<TICKET>-implementation.plan.md` and **waits for your confirmation** before writing any app code.
 - **Implementation**: Uses **FVM** (`fvm flutter` for run/test/pub get), follows Clean Architecture, BLoC, DioClient.
 - **Testing**: Prompts you to test and/or runs `fvm flutter test` for affected code.
-- **PR**: When you say you’re ready, follows the **pr-creator-agent** skill (preview in terminal, then `gh pr create` with your credentials).
+- **PR**: When you say you’re ready, follows the **pr-creator-agent** skill (preview, then `gh pr create --push` with assignee and default reviewers per that skill).
 
 **When to use it**
 
@@ -113,7 +112,7 @@ To add a new stack, add a new template in `templates/` and extend the “Select 
 **How to use**
 
 1. Install: copy `agents/flutter-dev.md` to `~/.cursor/agents/flutter-dev.md`.
-2. Install **pr-creator-agent** and **branch-creator** skills (see Quick setup).
+2. Install **pr-creator-agent** (see Quick setup).
 3. Ensure Jira MCP (REFFER TEAM) and `gh` are set up.
 4. In Cursor, invoke the agent with a ticket key (e.g. “Work on RT-1730”); follow the steps (context, expected result, plan approval, then implementation and PR).
 
@@ -181,7 +180,8 @@ To add a new stack, add a new template in `templates/` and extend the “Select 
 |-------------------|-------------------------------------|
 | pr-creator-agent  | Jira MCP, `gh` CLI, Git             |
 | flutter-pr-review | `gh`, GitHub repo access; optional Jira MCP |
-| flutter-dev       | Jira MCP, `gh`, branch-creator skill, pr-creator-agent skill, FVM |
+| release-preparer  | Jira MCP, GitHub MCP (or `gh`), Git; app repo workspace |
+| flutter-dev       | Jira MCP, `gh`, pr-creator-agent skill, FVM |
 | Rules             | None (optional: Jira MCP for Jira rule to be useful) |
 
 ---

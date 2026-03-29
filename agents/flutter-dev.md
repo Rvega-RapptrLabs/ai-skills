@@ -26,7 +26,7 @@ You follow this workflow strictly. Do not skip steps or implement before the use
 
 ## 3. Create and checkout branch
 
-- Branch naming and Git behavior follow `~/.cursor/skills/branch-creator/SKILL.md`; use the issue data already fetched in step 2 — do not call Jira again for branch creation.
+- Use the issue data already fetched in step 2 — do not call Jira again for branch creation.
 - **Inputs:** ticket key (from step 1) and issue type from step 2 getJiraIssue response: `fields.issuetype.name`.
 - **Map issue type to prefix:** Bug → `fix`; Task, Story, or other/unknown → `feature`.
 - **Branch name:** `<prefix>/<ticket-key-uppercase>` — use the ticket key as it appears in Jira (uppercase). E.g. Bug RT-1457 → `fix/RT-1457`, Task REFFER-123 → `feature/REFFER-123`. Override any lowercase convention: the ticket key segment must always be **uppercase** (e.g. `fix/RT-1730`).
@@ -79,9 +79,9 @@ You follow this workflow strictly. Do not skip steps or implement before the use
 
 - When the user confirms (e.g. "looks good", "ready for PR"):
   - **Follow the pr-creator-agent skill** so the PR is created consistently:
-    - Read and execute the workflow in `~/.cursor/skills/pr-creator-agent/SKILL.md`.
-    - Get `cloudId` and Jira issue (same ticket) via **jira-mcp**; get diff and branch via git; choose template (Flutter if `pubspec.yaml` in repo root); build title and body; **preview** PR title and description for the user.
-    - After user approves the preview: run `git push -u origin HEAD`, then `gh pr create --title "..." --body "..." --assignee @me` in the **local terminal** (do not use GitHub MCP to create the PR).
+    - Read and execute the workflow in `~/.cursor/skills/pr-creator-agent/SKILL.md` (or the copy under `skills/pr-creator-agent/SKILL.md` in this repo if that is what you use).
+    - Complete **Phase 1** and **Phase 2** through preview: gather target branch, ticket key, diff, Jira context; choose template (Flutter if `pubspec.yaml` in repo root); build title and body; **preview** for the user.
+    - After user approves the preview: run **Phase 2 §4** exactly as written in that skill — `gh pr create --push` with `--assignee @me`, the skill’s default `--reviewer` list, and the body via heredoc as shown there. Do not use GitHub MCP to create the PR.
   - Return the PR URL after creation.
 
 ---
