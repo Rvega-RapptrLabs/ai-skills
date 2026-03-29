@@ -17,7 +17,7 @@ ai-skills/
 ├── README.md                 # This file
 ├── skills/                   # Cursor Agent Skills (SKILL.md + assets)
 │   └── pr-creator-agent/
-│       ├── SKILL.md
+│   ├── flutter-pr-review/    # Flutter PR review via gh / Jira MCP
 │       └── templates/
 │           ├── flutter.md
 │           └── generic.md
@@ -81,6 +81,11 @@ ai-skills/
 - `templates/generic.md` – Generic (overview, key changes, technical implementation, breaking changes, testing).
 
 To add a new stack, add a new template in `templates/` and extend the “Select the template” logic in `SKILL.md`.
+### Other skills in `skills/`
+
+| Folder | Purpose |
+|--------|---------|
+| `flutter-pr-review` | Review Flutter PRs (Clean Architecture, BLoC, SOLID, bugs, performance); optional Jira MCP; GitHub comments with required AI attribution line. |
 
 ---
 
@@ -175,6 +180,7 @@ To add a new stack, add a new template in `templates/` and extend the “Select 
 | Item              | Depends on                          |
 |-------------------|-------------------------------------|
 | pr-creator-agent  | Jira MCP, `gh` CLI, Git             |
+| flutter-pr-review | `gh`, GitHub repo access; optional Jira MCP |
 | flutter-dev       | Jira MCP, `gh`, branch-creator skill, pr-creator-agent skill, FVM |
 | Rules             | None (optional: Jira MCP for Jira rule to be useful) |
 
@@ -185,6 +191,7 @@ To add a new stack, add a new template in `templates/` and extend the “Select 
 | Item                      | Purpose |
 |---------------------------|--------|
 | **pr-creator-agent**      | Create consistent, Jira-linked PRs via `gh pr create` and templates. |
+| **flutter-pr-review**     | Review Flutter PRs with team standards and structured GitHub comments. |
 | **flutter-dev**           | End-to-end Jira ticket flow: fetch ticket → branch → context → plan → implement → test → PR. |
 | **github-delete-protection** | Block all GitHub/Git delete actions; only give instructions. |
 | **jira-mcp-safety**       | REFFER TEAM default; no Jira issue delete without explicit confirmation. |
