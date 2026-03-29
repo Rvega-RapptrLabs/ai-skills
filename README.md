@@ -16,11 +16,14 @@ Everything here is intended to work with **Cursor** (and compatible setups that 
 ai-skills/
 ├── README.md                 # This file
 ├── skills/                   # Cursor Agent Skills (SKILL.md + assets)
-│   └── pr-creator-agent/
+│   ├── pr-creator-agent/
+│   │   └── templates/
+│   │       ├── flutter.md
+│   │       └── generic.md
 │   ├── flutter-pr-review/    # Flutter PR review via gh / Jira MCP
-│       └── templates/
-│           ├── flutter.md
-│           └── generic.md
+│   └── release-preparer/     # Jira + GitHub release candidate branch
+│       ├── SKILL.md
+│       └── feedback.md
 ├── agents/                   # Cursor Agents (subagent / workflow definitions)
 │   └── flutter-dev.md
 └── rules/                    # Cursor Rules (safety & project conventions)
@@ -38,7 +41,7 @@ ai-skills/
    ```
 
 2. **Copy items into your Cursor config** (paths assume macOS/Linux; adjust for Windows):
-   - **Skills** → `cp -r skills/pr-creator-agent ~/.cursor/skills/`
+   - **Skills** → `cp -r skills/pr-creator-agent ~/.cursor/skills/` and/or `cp -r skills/release-preparer ~/.cursor/skills/`
    - **Agents** → `cp agents/flutter-dev.md ~/.cursor/agents/`
    - **Rules** → `cp rules/*.mdc ~/.cursor/rules/` (or your project’s `.cursor/rules/`)
 
@@ -81,11 +84,42 @@ ai-skills/
 - `templates/generic.md` – Generic (overview, key changes, technical implementation, breaking changes, testing).
 
 To add a new stack, add a new template in `templates/` and extend the “Select the template” logic in `SKILL.md`.
+
+### release-preparer
+
+**Location:** `skills/release-preparer/`
+
+**What it does**
+
+- Validates a **three-segment build number** (e.g. `2.0.17`) from the user prompt.
+- Queries **Jira** (REFFER TEAM / `RT`) for issues where `"Target Release[Labels]"` equals that build number; lists ticket key and title.
+- Auto-detects the **GitHub repo** from the workspace (`gh repo view`).
+- Finds **merged PRs** on `development` that reference those ticket keys (PR search + optional commit scan).
+- Maps PRs to tickets; flags gaps.
+- Creates **`release-candidate/<build_number>`** from `main`, **cherry-picks** merge (or squash) commits, then **pushes** the branch.
+- **Waits for confirmation after each phase.** Appends user ratings to `feedback.md` in the skill folder.
+
+**When to use it**
+
+- You say: “Create the 2.0.17 release”, “Prepare release 2.0.17”, or similar with an explicit `x.y.z` version.
+
+**How to use**
+
+1. Install: copy `skills/release-preparer/` to `~/.cursor/skills/release-preparer/`.
+2. Open the **application repo** in Cursor (not only ai-skills), with `gh` and Git configured.
+3. Ensure **Jira MCP** and **GitHub MCP** (or `gh` + API access) can read issues and PRs.
+4. Invoke with a clear version string; confirm each step before the agent proceeds.
+
+**Safety**
+
+- No delete commands on GitHub or Jira; no force-push or destructive git. See `SKILL.md` for full rules.
+
 ### Other skills in `skills/`
 
 | Folder | Purpose |
 |--------|---------|
 | `flutter-pr-review` | Review Flutter PRs (Clean Architecture, BLoC, SOLID, bugs, performance); optional Jira MCP; GitHub comments with required AI attribution line. |
+| `release-preparer` | Prepare `release-candidate/x.y.z` from Jira target release + cherry-picks from `development`; confirmation gates; feedback log. |
 
 ---
 
@@ -181,6 +215,7 @@ To add a new stack, add a new template in `templates/` and extend the “Select 
 |-------------------|-------------------------------------|
 | pr-creator-agent  | Jira MCP, `gh` CLI, Git             |
 | flutter-pr-review | `gh`, GitHub repo access; optional Jira MCP |
+| release-preparer  | Jira MCP, GitHub MCP (or `gh`), Git; app repo workspace |
 | flutter-dev       | Jira MCP, `gh`, branch-creator skill, pr-creator-agent skill, FVM |
 | Rules             | None (optional: Jira MCP for Jira rule to be useful) |
 
@@ -192,6 +227,7 @@ To add a new stack, add a new template in `templates/` and extend the “Select 
 |---------------------------|--------|
 | **pr-creator-agent**      | Create consistent, Jira-linked PRs via `gh pr create` and templates. |
 | **flutter-pr-review**     | Review Flutter PRs with team standards and structured GitHub comments. |
+| **release-preparer**      | Build release candidate branch from Jira target release + cherry-picks from `development`. |
 | **flutter-dev**           | End-to-end Jira ticket flow: fetch ticket → branch → context → plan → implement → test → PR. |
 | **github-delete-protection** | Block all GitHub/Git delete actions; only give instructions. |
 | **jira-mcp-safety**       | REFFER TEAM default; no Jira issue delete without explicit confirmation. |
