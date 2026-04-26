@@ -21,10 +21,12 @@ When creating a PR, always request reviews from these users (via `--reviewer`): 
 
 Templates live in `~/.cursor/skills/pr-creator-agent/templates/`. Each file is a technology-specific PR description structure.
 
-| Template | File | Auto-detect signals |
-|----------|------|---------------------|
-| Flutter | `templates/flutter.md` | `pubspec.yaml` in repo root |
-| Generic | `templates/generic.md` | Fallback when no specific template matches |
+
+| Template | File                   | Auto-detect signals                        |
+| -------- | ---------------------- | ------------------------------------------ |
+| Flutter  | `templates/flutter.md` | `pubspec.yaml` in repo root                |
+| Generic  | `templates/generic.md` | Fallback when no specific template matches |
+
 
 To add a new template, create a file in `templates/` following the same markdown structure (Overview, Key Changes, Technical Implementation, Breaking Changes, Testing Notes as the minimum sections).
 
@@ -125,3 +127,4 @@ After successful creation, display the PR URL to the user.
 - NEVER skip the preview step — always show the PR content and wait for user approval.
 - NEVER fabricate file paths or changes not present in the diff.
 - If `gh pr create` fails, show the error and suggest fixes (e.g. `gh auth login`) rather than retrying blindly.
+
